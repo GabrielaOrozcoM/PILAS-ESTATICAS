@@ -1,0 +1,116 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define tam_max 10  // Tamaño máximo de la pila estática
+
+class Empleado {
+public:
+    string nombre;
+    int clave;
+
+    Empleado(string _nombre = "", int _clave = 0) : nombre(_nombre), clave(_clave) {}
+
+    friend ostream& operator<<(ostream& o, const Empleado& emp)
+    {
+        o << "\nCLAVE: " << emp.clave
+          << "\nNOMBRE: " << emp.nombre;
+        return o;
+    }
+};
+
+class Pila {
+private:
+    Empleado pila[tam_max];
+    int tope;
+
+public:
+    Pila() : tope(-1) {}
+
+    int Push(const Empleado& emp) {
+        if (Llena()) {
+            return 0;  // LLENA
+        }
+
+        pila[++tope] = emp;
+        return 1;  //APILA
+    }
+
+    int Pop() {
+        if (Vacia()) {
+            return 0;  // VACIA
+        }
+
+        --tope;
+        return 1;  //DESAPILACION
+    }
+
+    Empleado Top() const {
+        if (Vacia()) {
+            return Empleado();  // EMPLEADO VACIO SI PILA VACIA
+        }
+
+        return pila[tope];
+    }
+
+    int Llena() const {
+        return tope == tam_max - 1;
+    }
+
+    int Vacia() const {
+        return tope == -1;
+    }
+};
+
+int main() {
+    Pila miPila;
+    int opcion;
+    Empleado emp;
+
+    do {
+        cout << "\WELCOME:\n";
+        cout << "1. PUSH\n";
+        cout << "2. POP\n";
+        cout << "3. TOP\n";
+        cout << "4. SALIR\n";
+        cout << "OPCION: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                cout << "CLAVE: ";
+                cin >> emp.clave;
+                cout << "NOMBRE: ";
+                cin.ignore();
+                getline(cin, emp.nombre);
+                if (miPila.Push(emp)) {
+                    cout << "EMPLEADO APILADO" << endl;
+                } else {
+                    cout << "PILA LLENA NO SE PUEDE APILAR OTRO EMPLEADO" << endl;
+                }
+                break;
+            case 2:
+                if (miPila.Pop()) {
+                    cout << "EMPLEADO DESAPILADO" << endl;
+                } else {
+                    cout << "PILA VACIA NOSE PUEDE DESAPILAR" << endl;
+                }
+                break;
+            case 3:
+                emp = miPila.Top();
+                if (emp.nombre.empty()) {
+                    cout << "PILA VACIA" << endl;
+                } else {
+                    cout << "EMPLEADO EN LA CIMA DE LA PILA: " << emp << endl;
+                }
+                break;
+            case 4:
+                cout << "BAIS" << endl;
+                break;
+            default:
+                cout << "OPCION NO VALIDA" << endl;
+        }
+    } while (opcion != 4);
+
+    return 0;
+}
